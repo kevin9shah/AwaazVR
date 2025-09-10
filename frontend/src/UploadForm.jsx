@@ -32,17 +32,23 @@ const UploadForm = () => {
   };
 
   const handleFileChange = (e) => handleFileSelect(e.target.files[0]);
+  
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') setDragActive(true);
     else if (e.type === 'dragleave') setDragActive(false);
   };
+  
   const handleDrop = (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]);
+  };
+
+  const handleBrowseClick = () => {
+    document.getElementById('pdf-upload').click();
   };
 
   const handleUpload = async () => {
@@ -123,7 +129,9 @@ const UploadForm = () => {
             onChange={handleFileChange}
             className="upload-input"
             disabled={uploading}
+            style={{ display: 'none' }}
           />
+
           <div className="upload-content">
             {file ? (
               <div className="file-info">
@@ -136,13 +144,21 @@ const UploadForm = () => {
                   <p className="file-name">{file.name}</p>
                   <p className="file-size">{formatFileSize(file.size)}</p>
                 </div>
+                <button 
+                  type="button"
+                  onClick={handleBrowseClick}
+                  className="change-file-btn"
+                  disabled={uploading}
+                >
+                  Change File
+                </button>
               </div>
             ) : (
               <div className="drop-placeholder">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
-                <p>Drop your PDF here or click to browse</p>
+                <p>Drop your PDF here or <button type="button" onClick={handleBrowseClick} className="browse-link" disabled={uploading}>click to browse</button></p>
                 <p className="hint-text">Only PDF files up to 10MB are supported</p>
               </div>
             )}

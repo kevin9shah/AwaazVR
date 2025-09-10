@@ -7,7 +7,7 @@ const Header = () => {
       <div className="header-container">
         <div className="header-inner">
           <div className="logo">
-            <h1>AWAAZ VR</h1>
+            <h1>AWAAZ</h1>
           </div>
 
           <nav className="nav-desktop">
