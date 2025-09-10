@@ -1,0 +1,30 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9fafb; /* bg-gray-50 */
+}
+
+.app-main {
+  flex: 1;
+  padding: 3rem 1rem; /* py-12 px-4 */
+}
+
+@media(min-width: 640px) {
+  .app-main {
+    padding-left: 1.5rem; /* sm:px-6 */
+    padding-right: 1.5rem;
+  }
+}
+
+@media(min-width: 1024px) {
+  .app-main {
+    padding-left: 2rem; /* lg:px-8 */
+    padding-right: 2rem;
+  }
+}
+
+.upload-wrapper {
+  max-width: 64rem; /* max-w-4xl */
+  margin: 0 auto;
+}
