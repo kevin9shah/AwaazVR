@@ -114,13 +114,10 @@ const UploadForm = () => {
 
   return (
     <div className="upload-form-container">
-      <div className="upload-header">
-        <h2>Improve Your Presentation Skills</h2>
-        <p>
-          Upload your presentation PDF and let our VR technology help you practice and improve your delivery skills in an immersive environment.
-        </p>
+      <div className="upload-form-header">
+        <h2>Upload Your Presentation</h2>
+        <p>Get started with VR training by uploading your PDF</p>
       </div>
-
       <div className="upload-card">
         <div
           className={`upload-dropzone ${dragActive ? 'drag-active' : file ? 'file-selected' : ''}`}
