@@ -9,26 +9,32 @@ public class HashcodeManager : MonoBehaviour
 
     void Start()
     {
-        codeText.text = "";
+        if (codeText != null)
+            codeText.text = "";
     }
 
     public void AddNum(string num)
     {
-        codeText.text += num;
+        if (codeText != null)
+            codeText.text += num;
     }
 
     public void ClearCode()
     {
-        codeText.text = "";
+        if (codeText != null)
+            codeText.text = "";
     }
 
-    public async void SubmitCode()
+    public void SubmitCode()
     {
-        if (programManager != null)
+        if (programManager != null && codeText != null)
         {
+            // pass code to ProgramManager
             programManager.presentationCode = codeText.text;
-            programManager.codeText = codeText; // ensure reference
-            await programManager.LoadPresentation(codeText.text);
+            programManager.codeText = codeText; // keep UI reference
+
+            // start ProgramManager's coroutine
+            programManager.StartCoroutine(programManager.LoadPresentation(codeText.text));
         }
     }
 }

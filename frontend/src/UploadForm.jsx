@@ -73,7 +73,7 @@ const UploadForm = () => {
       const formData = new FormData();
       formData.append('pdf', file);
 
-      const response = await axios.post('http://localhost:3000/api/upload-presentation', formData, {
+      const response = await axios.post('https://awaazbackend.onrender.com/api/upload-presentation', formData, {
         headers: {},
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
