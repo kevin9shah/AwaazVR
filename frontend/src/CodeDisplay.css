@@ -47,3 +47,8 @@
     color: #d6deeb;
     font-family: 'Source Code Pro', monospace;
 }
+
+.placeholder-code {
+  color: #a7cde8;
+  font-style: italic;
+}
