@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './Header';
 import MainContent from './MainContent';
 import UploadForm from './UploadForm';
 import CodeDisplay from './CodeDisplay';
+import ReportInput from './ReportInput';
+import Report from './report';
 import Footer from './Footer';
 import './App.css';
 
@@ -14,22 +17,30 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <Header />
-      <main className="app-main">
-        <div className="main-layout">
-          <MainContent />
-          <div className="upload-section">
-            {!generatedCode ? (
-              <UploadForm onCodeGeneration={handleCodeGeneration} />
-            ) : (
-              <CodeDisplay code={generatedCode} />
-            )}
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <Router>
+      <div className="app-container">
+        <Header />
+        <Routes>
+          <Route path="/" element={
+            <main className="app-main">
+              <div className="main-layout">
+                <MainContent />
+                <div className="upload-section">
+                  {!generatedCode ? (
+                    <UploadForm onCodeGeneration={handleCodeGeneration} />
+                  ) : (
+                    <CodeDisplay code={generatedCode} />
+                  )}
+                </div>
+              </div>
+            </main>
+          } />
+          <Route path="/report-input" element={<ReportInput />} />
+          <Route path="/report" element={<Report />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
