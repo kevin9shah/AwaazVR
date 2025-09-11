@@ -1,65 +1,69 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PresentationManager : MonoBehaviour
 {
-    [Header("Projector Settings")]
-    [Tooltip("UI Image that displays the slides (e.g., the projector canvas Image)")]
-    public Image projectionImage;
+    [Header("References")]
+    public ProgramManager programManager;   // Drag ProgramManager from hierarchy
+    public Image slideImage;                // UI Image where slides are shown
 
-    [Tooltip("List of slide textures (set in Inspector or at runtime)")]
-    public List<Texture2D> slideTextures = new List<Texture2D>();
+    [Header("Slide Control")]
+    public int currentSlide = 0;
 
-    private int currentIndex = 0;
-
-    void Start()
+    private void Start()
     {
-        if (slideTextures.Count > 0)
+        // Try to load the first slide when everything is ready
+        if (programManager != null && programManager.slideSprites != null && programManager.slideSprites.Length > 0)
         {
-            ShowSlide(currentIndex);
+            ShowSlide(0);
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ No slides available to show at Start.");
         }
     }
 
-    /// <summary>
-    /// Go to the next slide if available.
-    /// </summary>
+    public void ShowSlide(int index)
+    {
+        if (programManager == null || programManager.slideSprites == null) return;
+
+        if (index >= 0 && index < programManager.slideSprites.Length)
+        {
+            currentSlide = index;
+            slideImage.sprite = programManager.slideSprites[currentSlide];
+            Debug.Log($"📖 Showing slide {currentSlide + 1}");
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ Slide index {index} is out of range.");
+        }
+    }
+
     public void NextSlide()
     {
-        if (slideTextures.Count == 0) return;
+        if (programManager == null || programManager.slideSprites == null) return;
 
-        currentIndex = Mathf.Min(currentIndex + 1, slideTextures.Count - 1);
-        ShowSlide(currentIndex);
+        if (currentSlide < programManager.slideSprites.Length - 1)
+        {
+            ShowSlide(currentSlide + 1);
+        }
+        else
+        {
+            Debug.Log("✅ Already at last slide.");
+        }
     }
 
-    /// <summary>
-    /// Go to the previous slide if available.
-    /// </summary>
-    public void PrevSlide()
+    public void PreviousSlide()
     {
-        if (slideTextures.Count == 0) return;
+        if (programManager == null || programManager.slideSprites == null) return;
 
-        currentIndex = Mathf.Max(currentIndex - 1, 0);
-        ShowSlide(currentIndex);
-    }
-
-    /// <summary>
-    /// Display the slide at the given index.
-    /// </summary>
-    private void ShowSlide(int index)
-    {
-        if (index < 0 || index >= slideTextures.Count || projectionImage == null) return;
-
-        Texture2D tex = slideTextures[index];
-        if (tex == null) return;
-
-        // Convert Texture2D into a Sprite for the UI Image
-        Sprite sprite = Sprite.Create(
-            tex,
-            new Rect(0, 0, tex.width, tex.height),
-            new Vector2(0.5f, 0.5f)
-        );
-
-        projectionImage.sprite = sprite;
+        if (currentSlide > 0)
+        {
+            ShowSlide(currentSlide - 1);
+        }
+        else
+        {
+            Debug.Log("✅ Already at first slide.");
+        }
     }
 }

@@ -1,10 +1,13 @@
 ﻿<Properties StartupConfiguration="{EF0BDA83-B551-D06B-7637-2EB60B8DFE46}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/HashcodeManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/NPCManager.cs">
     <Files>
-      <File FileName="Assets/Scripts/PresentationManager.cs" Line="17" Column="6" />
-      <File FileName="Assets/Scripts/HashcodeManager.cs" Line="14" Column="1" />
-      <File FileName="Assets/Scripts/Program.cs" Line="46" Column="77" />
-      <File FileName="Assets/Scripts/ProgramManager.cs" Line="26" Column="50" />
+      <File FileName="Assets/Scripts/PresentationManager.cs" Line="8" Column="79" />
+      <File FileName="Assets/Scripts/ImageLoader.cs" Line="55" Column="1" />
+      <File FileName="Assets/Scripts/HashcodeManager.cs" Line="41" Column="1" />
+      <File FileName="Assets/Scripts/ProgramManager.cs" Line="153" Column="1" />
+      <File FileName="Assets/Scripts/SimpleJSON.cs" Line="1434" Column="2" />
+      <File FileName="Assets/Scripts/NPCController.cs" Line="61" Column="1" />
+      <File FileName="Assets/Scripts/NPCManager.cs" Line="33" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -12,7 +15,7 @@
           <Node name="Unity-Frontend" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
-                <Node name="HashcodeManager.cs" selected="True" />
+                <Node name="NPCManager.cs" selected="True" />
               </Node>
             </Node>
           </Node>
