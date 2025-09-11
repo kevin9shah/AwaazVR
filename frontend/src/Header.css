@@ -1,48 +1,15 @@
-/* High Contrast Glassmorphism Header */
+/* Futuristic Header */
 
 .header {
   width: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(30px);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-  padding: 1.5rem 1.5rem;
+  background: rgba(13, 12, 29, 0.5); /* Dark navy translucent */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 119, 255, 0.5);
+  padding: 1rem 1.5rem;
   position: sticky;
   top: 0;
   z-index: 100;
   transition: all 0.3s ease;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, 
-    rgba(0, 0, 0, 0.2) 0%, 
-    rgba(0, 0, 0, 0.4) 50%, 
-    rgba(0, 0, 0, 0.2) 100%);
-  border-radius: 0 0 2rem 2rem;
-  z-index: -1;
-}
-
-.header::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.05) 50%, 
-    transparent 100%);
-  border-radius: 0 0 2rem 2rem;
-  z-index: -1;
 }
 
 .header-container {
@@ -54,44 +21,37 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-}
-
-.logo {
-  position: relative;
 }
 
 .logo h1 {
-  font-size: 2.5rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 30%, #e2e8f0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #fff;
   margin: 0;
-  letter-spacing: -0.02em;
-  text-shadow: 
-    0 0 20px rgba(255, 255, 255, 0.8),
-    0 0 40px rgba(255, 255, 255, 0.6),
-    0 0 60px rgba(255, 255, 255, 0.4);
-  animation: logoGlow 3s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+  letter-spacing: 0.05em;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 20px #0077ff,
+    0 0 30px #0077ff,
+    0 0 40px #0077ff;
+  animation: logo-flicker 3s infinite alternate;
 }
 
 .logo::after {
-  content: 'VR';
-  position: absolute;
-  top: -0.5rem;
-  right: -1.5rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #3b82f6, #10b981);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: float 4s ease-in-out infinite;
-  text-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
-  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
+    content: 'VR';
+    position: absolute;
+    top: -0.5rem;
+    right: -1.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #3b82f6, #10b981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: float 4s ease-in-out infinite;
+    text-shadow: 0 0 15px rgba(59, 130, 246, 0.8);
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.6));
 }
 
 .nav-desktop {
@@ -100,62 +60,36 @@
 
 .nav-links {
   display: flex;
-  gap: 0.5rem;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(15px);
-  padding: 0.75rem 1.5rem;
-  border-radius: 2rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
-
-.nav-links:hover {
-  background: rgba(0, 0, 0, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
+  gap: 1rem;
 }
 
 .nav-links a {
   text-decoration: none;
-  font-weight: 700;
-  color: #ffffff;
+  font-weight: 500;
+  color: #fff;
   padding: 0.5rem 1rem;
-  border-radius: 1rem;
+  border-radius: 5px;
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-.nav-links a::before {
+.nav-links a::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s ease;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #0077ff;
+  transition: width 0.3s ease;
 }
 
-.nav-links a:hover::before {
-  left: 100%;
+.nav-links a:hover::after {
+  width: 100%;
 }
 
 .nav-links a:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  color: #0077ff;
 }
 
 /* Mobile Nav */
@@ -168,34 +102,25 @@
   height: 28px;
   color: #ffffff;
   transition: all 0.3s ease;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
 }
 
 .menu-icon:hover {
-  color: #ffffff;
-  transform: scale(1.1);
-  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+  color: #0077ff;
 }
 
-/* Enhanced Animations */
-@keyframes logoGlow {
-  0% { 
-    text-shadow: 
-      0 0 20px rgba(255, 255, 255, 0.8),
-      0 0 40px rgba(255, 255, 255, 0.6),
-      0 0 60px rgba(255, 255, 255, 0.4);
+/* Animations */
+@keyframes logo-flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow:
+      0 0 5px #fff,
+      0 0 10px #fff,
+      0 0 20px #0077ff,
+      0 0 30px #0077ff,
+      0 0 40px #0077ff;
   }
-  100% { 
-    text-shadow: 
-      0 0 30px rgba(255, 255, 255, 1),
-      0 0 60px rgba(255, 255, 255, 0.8),
-      0 0 90px rgba(255, 255, 255, 0.6);
+  20%, 24%, 55% {
+    text-shadow: none;
   }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(5deg); }
 }
 
 /* Responsive */
@@ -203,15 +128,15 @@
   .header {
     padding: 1rem;
   }
-  
+
   .logo h1 {
     font-size: 2rem;
   }
-  
+
   .nav-desktop {
     display: none;
   }
-  
+
   .nav-mobile {
     display: block;
   }
