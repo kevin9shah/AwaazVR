@@ -51,6 +51,9 @@ const UploadForm = () => {
     document.getElementById('pdf-upload').click();
   };
 
+  const [code, setCode] = useState("");
+  const [codeCopied, setCodeCopied] = useState(false);
+
   const handleUpload = async () => {
     if (!file) return;
     setUploading(true);
@@ -70,8 +73,8 @@ const UploadForm = () => {
       const formData = new FormData();
       formData.append('pdf', file);
 
-      const response = await axios.post('http://localhost:5000/generate', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axios.post('https://awaazbackend.onrender.com/api/upload-presentation', formData, {
+        headers: {},
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           setProgress(percentCompleted);
@@ -83,17 +86,21 @@ const UploadForm = () => {
       setUploadStatus({ type: 'success', message: 'Upload successful! PDF uploaded to database.' });
       console.log('Upload response:', response.data);
 
+      // Extract code from response and set it
+      if (response.data && response.data.code) {
+        setCode(response.data.code);
+      } else {
+        setCode("");
+      }
+
     } catch (error) {
       clearInterval(progressInterval);
       setUploadStatus({ type: 'error', message: 'Upload failed. Please try again.' });
+      setCode("");
       console.error('Upload error:', error);
     } finally {
       setUploading(false);
-      setTimeout(() => {
-        setProgress(0);
-        setFile(null);
-        setUploadStatus(null);
-      }, 4000);
+      // Removed setTimeout to keep the response and code visible
     }
   };
 
@@ -183,6 +190,33 @@ const UploadForm = () => {
               </svg>
             )}
             <span>{uploadStatus.message}</span>
+          </div>
+        )}
+
+        {/* Show code if available */}
+        {code && (
+          <div className="code-section">
+            <label htmlFor="presentation-code">Presentation Code:</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input
+                id="presentation-code"
+                type="text"
+                value={code}
+                readOnly
+                style={{ fontFamily: 'monospace', fontSize: '1.1em', padding: '4px 8px', width: '120px' }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(code);
+                  setCodeCopied(true);
+                  setTimeout(() => setCodeCopied(false), 1500);
+                }}
+                style={{ padding: '4px 10px', cursor: 'pointer' }}
+              >
+                {codeCopied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
           </div>
         )}
 
