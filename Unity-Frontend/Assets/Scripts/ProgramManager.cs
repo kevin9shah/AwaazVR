@@ -1,170 +1,170 @@
-// ProgramManager.cs
-// Purpose: Manages API communication, data processing, and UI state updates.
+    using UnityEngine;
+    using UnityEngine.Networking;
+    using TMPro;
+    using System.Collections;
+    using SimpleJSON;
 
-using UnityEngine;
-using UnityEngine.Networking;
-using TMPro;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-//using Newtonsoft.Json; // <-- Important: Using Newtonsoft for dictionary support
-
-public class ProgramManager : MonoBehaviour
-{
-    [Header("API Configuration")]
-    [Tooltip("The base URL of your backend server. E.g., http://localhost:3000")]
-    public string backendUrl = "http://localhost:3000";
-
-    [Header("UI References")]
-    [Tooltip("The TextMeshPro UI element to display loading/success/error status.")]
-    public TextMeshProUGUI statusText;
-    [Tooltip("The parent GameObject of the hashcode input UI that will be disabled on success.")]
-    public GameObject hashcodeUI;
-
-    // Public properties to hold the final, processed data for other scripts to access
-    public static Dictionary<int, string> SlideQuestions { get; private set; }
-    public static Dictionary<int, string> SlideImageUrls { get; private set; }
-    public static Dictionary<int, string> SpeechContents { get; private set; }
-    public static int SlideCount { get; private set; }
-    public static string PresentationTitle { get; private set; }
-
-    // Properties set by HashcodeManager
-    [HideInInspector]
-    public string presentationCode;
-    [HideInInspector]
-    public TextMeshProUGUI codeText;
-
-    private void Start()
+    public class ProgramManager : MonoBehaviour
     {
-        // Initialize dictionaries to avoid null reference errors
-        SlideQuestions = new Dictionary<int, string>();
-        SlideImageUrls = new Dictionary<int, string>();
-        SpeechContents = new Dictionary<int, string>();
+        [Header("Input")]
+        public string presentationCode;
 
-        if (statusText != null)
+        [Header("UI References")]
+        public TextMeshProUGUI statusText;
+        public TextMeshProUGUI codeText;
+        public GameObject hashcodeCanvas;
+
+        [Header("Slide UI Canvases")]
+        public GameObject speechCanvas;        // Canvas for scrollable speech
+        public TextMeshProUGUI speechText;     // Scrollable TMP text in speech canvas
+        public GameObject slideControlCanvas;  // Canvas with Next/Prev buttons
+
+        [Header("Fetched Presentation Data")]
+        public string title;
+        public int slideCount;
+        public bool hasImages;
+        public string createdAt;
+
+        [Header("Slide Data")]
+        public string[] slideTexts;
+        public string[] slideImageUrls;
+        public string[] speechContents;
+        public string[] questions;
+
+        [Header("Slides as Sprites (Loaded)")]
+        public Sprite[] slideSprites;
+
+        private string baseUrl = "http://localhost:3000/api/presentation/";
+
+        public IEnumerator LoadPresentation(string code)
         {
-            statusText.text = "Please enter the presentation code.";
-        }
-    }
-
-    /// <summary>
-    /// Fetches and processes the presentation data from the backend.
-    /// This is an async Task method to allow for non-blocking web requests.
-    /// </summary>
-    public async Task LoadPresentation(string code)
-    {
-        if (string.IsNullOrWhiteSpace(code))
-        {
-            statusText.text = "Error: Code cannot be empty.";
-            return;
-        }
-
-        presentationCode = code;
-        string apiUrl = $"{backendUrl}/api/presentation/{presentationCode}";
-        statusText.text = $"Connecting...";
-
-        // Using UnityWebRequest for the API call
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(apiUrl))
-        {
-            // Send the request and wait for the response asynchronously
-            var operation = webRequest.SendWebRequest();
-            while (!operation.isDone)
+            string url = baseUrl + code;
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
             {
-                await Task.Yield(); // Wait for the next frame
-            }
+                yield return www.SendWebRequest();
 
-            // Check for network or HTTP errors
-            if (webRequest.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError($"API Error: {webRequest.error}");
-                statusText.text = $"Error: Could not find presentation. Please check the code and try again.";
-                // Clear the hashcode input field on failure
-                if (codeText != null)
+                if (www.result != UnityWebRequest.Result.Success)
                 {
-                    codeText.text = "";
+                    Debug.LogError("Request Error: " + www.error);
+                    if (statusText != null) statusText.text = "Failed";
+                    if (codeText != null) codeText.text = "";
+                    yield break;
                 }
-            }
-            else
-            {
-                // Request was successful
-                statusText.text = "Processing presentation...";
-                string jsonResponse = webRequest.downloadHandler.text;
 
-                try
+                var json = JSON.Parse(www.downloadHandler.text);
+
+                if (json == null || !json["success"].AsBool)
                 {
-                    // Deserialize the JSON response using Newtonsoft
-                    //ApiResponse response = JsonConvert.DeserializeObject<ApiResponse>(jsonResponse);
+                    Debug.LogError("Invalid response: " + www.downloadHandler.text);
+                    if (statusText != null) statusText.text = "Failed";
+                    if (codeText != null) codeText.text = "";
+                    yield break;
+                }
 
-                    if (response != null && response.success)
+                var pres = json["presentation"];
+                title = pres["title"];
+                slideCount = pres["slideCount"].AsInt;
+                hasImages = pres["hasImages"].AsBool;
+                createdAt = pres["createdAt"];
+
+                // --- Slide URLs ---
+                var slideUrls = pres["slideUrls"];
+                if (slideUrls != null && slideUrls.Count > 0)
+                {
+                    slideImageUrls = new string[slideUrls.Count];
+                    foreach (var kvp in slideUrls)
                     {
-                        ProcessData(response.presentation);
+                        string key = kvp.Key;
+                        JSONNode value = kvp.Value;
 
-                        // --- UI SUCCESS LOGIC ---
-                        statusText.text = $"Success! Loaded '{PresentationTitle}'.";
-                        if (hashcodeUI != null)
+                        if (int.TryParse(key, out int index))
                         {
-                            hashcodeUI.SetActive(false); // Disable the hashcode input UI
+                            index -= 1;
+                            if (index >= 0 && index < slideImageUrls.Length)
+                                slideImageUrls[index] = value.Value;
                         }
                     }
-                    else
+                }
+
+                // --- Slide Texts ---
+                var texts = pres["slideTexts"];
+                if (texts != null && texts.Count > 0)
+                {
+                    slideTexts = new string[texts.Count];
+                    foreach (var kvp in texts)
                     {
-                        throw new System.Exception("API returned success: false or invalid format.");
+                        string key = kvp.Key;
+                        JSONNode value = kvp.Value;
+
+                        if (int.TryParse(key, out int index))
+                        {
+                            index -= 1;
+                            if (index >= 0 && index < slideTexts.Length)
+                                slideTexts[index] = value.Value;
+                        }
                     }
                 }
-                catch (System.Exception ex)
+
+                // --- Questions ---
+                var qns = pres["questions"];
+                if (qns != null && qns.Count > 0)
                 {
-                    Debug.LogError($"JSON Parsing Error: {ex.Message}");
-                    statusText.text = "Error: Failed to process data from server.";
-                    if (codeText != null) codeText.text = ""; // Clear input
+                    questions = new string[qns.Count];
+                    for (int i = 0; i < qns.Count; i++)
+                    {
+                        questions[i] = qns[i].Value;
+                    }
+                }
+
+                // --- Speech Content ---
+                var speech = pres["speechContent"];
+                if (speech != null && speech.Count > 0)
+                {
+                    speechContents = new string[speech.Count];
+                    for (int i = 0; i < speech.Count; i++)
+                    {
+                        speechContents[i] = speech[i].Value;
+                    }
+
+                    // Combine all speech into a single string for display
+                    if (speechText != null)
+                    {
+                        string combinedSpeech = "";
+                        for (int i = 0; i < speechContents.Length; i++)
+                        {
+                            combinedSpeech += $"Slide {i + 1}: {speechContents[i]}\n\n";
+                        }
+                        speechText.text = combinedSpeech;
+                    }
+                }
+
+                // ✅ Show success
+                Debug.Log("✅ Presentation Loaded Successfully");
+                if (statusText != null) statusText.text = "Passed";
+                if (codeText != null) codeText.text = ""; // clear input
+
+                // 🔴 Enable required UI
+                if (hashcodeCanvas != null) hashcodeCanvas.SetActive(false);
+                if (speechCanvas != null) speechCanvas.SetActive(true);
+                if (slideControlCanvas != null) slideControlCanvas.SetActive(true);
+
+                // 🔽 Trigger slide image loading
+                ImageLoader imageLoader = FindObjectOfType<ImageLoader>();
+                if (imageLoader != null && slideImageUrls != null && slideImageUrls.Length > 0)
+                {
+                    StartCoroutine(imageLoader.LoadImages(slideImageUrls, this));
+                }
+                else
+                {
+                    Debug.LogWarning("⚠️ No ImageLoader found or no slide URLs to load.");
+                }
+
+                // 🔹 Trigger NPC questions automatically
+                NPCManager npcManager = FindObjectOfType<NPCManager>();
+                if (npcManager != null && questions != null && questions.Length > 0)
+                {
+                    npcManager.StartQuestions(questions); // pass questions in order
                 }
             }
         }
     }
-
-    /// <summary>
-    /// Processes the raw data from the API response and populates the clean, static dictionaries.
-    /// </summary>
-    private void ProcessData(PresentationData data)
-    {
-        // Clear any old data
-        SlideQuestions.Clear();
-        SlideImageUrls.Clear();
-        SpeechContents.Clear();
-
-        PresentationTitle = data.title;
-        SlideCount = data.slideCount;
-
-        // Populate Image URLs
-        if (data.slideUrls != null)
-        {
-            foreach (var pair in data.slideUrls)
-            {
-                SlideImageUrls[int.Parse(pair.Key)] = pair.Value;
-            }
-        }
-
-        // Populate Questions (extracting the single question from the list)
-        if (data.questions != null)
-        {
-            foreach (var pair in data.questions)
-            {
-                if (pair.Value != null && pair.Value.Count > 0)
-                {
-                    SlideQuestions[int.Parse(pair.Key)] = pair.Value[0];
-                }
-            }
-        }
-
-        // Populate Speech Content
-        if (data.speechContent != null)
-        {
-            foreach (var pair in data.speechContent)
-            {
-                SpeechContents[int.Parse(pair.Key)] = pair.Value;
-            }
-        }
-
-        // You can now access the data from any other script, for example:
-        Debug.Log($"Loaded Presentation: {PresentationTitle} with {SlideCount} slides.");
-        Debug.Log($"Question for slide 1: {SlideQuestions[1]}");
-    }
-}
