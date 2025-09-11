@@ -1,0 +1,30 @@
+﻿<Properties StartupConfiguration="{EF0BDA83-B551-D06B-7637-2EB60B8DFE46}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/HashcodeManager.cs">
+    <Files>
+      <File FileName="Assets/Scripts/PresentationManager.cs" Line="17" Column="6" />
+      <File FileName="Assets/Scripts/HashcodeManager.cs" Line="14" Column="1" />
+      <File FileName="Assets/Scripts/Program.cs" Line="46" Column="77" />
+      <File FileName="Assets/Scripts/ProgramManager.cs" Line="26" Column="50" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Unity-Frontend" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="HashcodeManager.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="63f0c1be-118b-4590-8c78-d4bd8b31d454" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
