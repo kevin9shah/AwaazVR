@@ -7,6 +7,7 @@ import CodeDisplay from './CodeDisplay';
 import ReportInput from './ReportInput';
 import Report from './report';
 import Footer from './Footer';
+import About from './About';
 import './App.css';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           } />
           <Route path="/report-input" element={<ReportInput />} />
           <Route path="/report" element={<Report />} />
+          <Route path="/about" element={<About />} />'
         </Routes>
         <Footer />
       </div>
