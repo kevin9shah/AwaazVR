@@ -1,1 +1,1 @@
-Backed repository can be found at : https://github.com/kevin9shah/AwaazBackend
+Backend repository can be found at : https://github.com/kevin9shah/AwaazBackend
